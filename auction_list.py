@@ -11,7 +11,7 @@ size_price_function = lambda x: len(x)
 random_price_function = lambda x: np.random.rand()
 random_size_price_function = lambda x: len(x) * np.random.rand()
 
-# An auction in which every person exactly wants one item for price of 1
+# An auction in which every person exactly wants one item
 def create_different_minded_auction(n_items, price_function=fixed_price_function):
     items = set([])
     persons = []
