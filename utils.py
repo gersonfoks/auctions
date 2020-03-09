@@ -5,7 +5,7 @@ import numpy as np
 def powerset(iterable):
     # https://stackoverflow.com/questions/18035595/powersets-in-python-using-itertools
     s = list(iterable)
-    return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
+    return chain.from_iterable([set(x) for x in combinations(s, r)] for r in range(len(s) + 1))
 
 
 def create_bundle_allocation_from_item_allocation(item_allocation):
