@@ -41,10 +41,7 @@ class GeneticAlgorithm(AuctionSearch):
 
     def calculate(self):
         # Create first population
-        population = [
-            get_random_allocation(self.auction)
-            for _ in range(self.pop_size)
-        ]
+        population = []
 
         iter = 0
 
