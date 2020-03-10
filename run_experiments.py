@@ -1,16 +1,14 @@
 from GeneticAlgorithm import *
-from auction_list import *
 from generate_auctions import *
-from utils import create_bundle_allocation_from_item_allocation, count_numbers_below_zero
+from utils import count_numbers_below_zero
 import csv
-auction = random_auction
+
 
 settings_genetic = {
     "max_iter": 100,
     "pop_size": 25
 }
-# allocation = algorithm.calculate()
-# bundle_allocation = create_bundle_allocation_from_item_allocation(allocation)
+
 
 settings_random = {
     "max_iter": settings_genetic["max_iter"] * settings_genetic["pop_size"],
@@ -81,7 +79,3 @@ for alg, settings in to_try:
             print(np.std(sws))
             writer.writerow([name[0], name[1],  "{}".format(name) ,below_zero, np.mean(sws), np.std(sws)])
 
-# for prs, sws in zip(prices_results, sws_results):
-#     below_zero = [count_numbers_below_zero(pr) for pr in prs]
-#     print(below_zero)
-#     print(np.mean(sws))
