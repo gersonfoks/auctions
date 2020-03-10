@@ -1,5 +1,5 @@
 from auction import Person, Auction
-from utils import powerset, create_bundle_allocation_from_item_allocation, get_random_allocation
+from utils import powerset, create_bundle_allocation_from_item_allocation, get_random_allocation_from_preferences
 
 items = {
    i for i in range(4)
@@ -21,7 +21,7 @@ allocation_1 = [
 bundle_allocation_1 = create_bundle_allocation_from_item_allocation(allocation_1)
 
 
-random_allocation = get_random_allocation(auction)
+random_allocation = get_random_allocation_from_preferences(auction)
 print(random_allocation)
 random_bundle_allocation = create_bundle_allocation_from_item_allocation(random_allocation)
 print(auction.get_highest_bid_pay(random_bundle_allocation))

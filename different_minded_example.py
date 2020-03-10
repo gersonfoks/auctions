@@ -1,10 +1,10 @@
 from auction_list import create_different_minded_auction, random_price_function
-from utils import get_random_allocation, create_bundle_allocation_from_item_allocation
+from utils import get_random_allocation_from_preferences, create_bundle_allocation_from_item_allocation
 
 
 auction = create_different_minded_auction(10**3, random_price_function)
 
-allocation = get_random_allocation(auction)
+allocation = get_random_allocation_from_preferences(auction)
 
 bundle_allocation = create_bundle_allocation_from_item_allocation(allocation)
 
