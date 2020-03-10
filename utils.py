@@ -20,7 +20,7 @@ def create_bundle_allocation_from_item_allocation(item_allocation):
     return result
 
 
-def get_random_allocation(auction):
+def get_random_allocation_from_preferences(auction):
     # Creates a random allocation, in which random persons get exactly what they want.
     items_to_select = auction.items.copy()  # Copy the items to a new set
     persons_to_select = auction.persons.copy()
@@ -37,3 +37,17 @@ def get_random_allocation(auction):
     for item in items_to_select:
         allocation[item] = np.random.choice(auction.persons)
     return allocation
+
+
+def get_random_allocation(auction):
+    # Creates a random allocation, in which random persons get exactly what they want.
+
+    persons_to_select = auction.persons.copy()
+
+    allocation = [np.random.choice(persons_to_select) for i in range(len(auction.items))]
+
+    return allocation
+
+
+def count_numbers_below_zero(array):
+    return len([i for i in array if i < 0])

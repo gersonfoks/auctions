@@ -32,6 +32,9 @@ class Auction:
     def get_approximate_price(self, bundle_allocation):
         return sum([person.get_approximate_price(bundle) for (person, bundle) in bundle_allocation.items()])
 
+    def get_social_welfare(self, bundles, prices):
+        return self.get_highest_bid_pay(bundles) - sum(prices)
+
 class Person:
     def __init__(self, id, bundle, price):
         self.id = id

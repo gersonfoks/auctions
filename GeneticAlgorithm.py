@@ -1,7 +1,8 @@
 from abc import abstractmethod
 
 import numpy as np
-from utils import get_random_allocation, create_bundle_allocation_from_item_allocation
+from utils import get_random_allocation_from_preferences, create_bundle_allocation_from_item_allocation, \
+    get_random_allocation
 
 
 class AuctionSearch:
@@ -28,6 +29,10 @@ class RandomSearch(AuctionSearch):
         max_val = max(fitness_scores)
         return solutions[fitness_scores.index(max_val)]
 
+    @classmethod
+    def get_name(self):
+        return "random_search"
+
 
 class GeneticAlgorithm(AuctionSearch):
     def __init__(self, auction, max_iter=1, pop_size=5, mutation_rate=0.1):
@@ -48,7 +53,7 @@ class GeneticAlgorithm(AuctionSearch):
         best = None
         best_score = -np.math.inf
         while iter < self.max_iter:
-            fresh_pop = [get_random_allocation(self.auction) for _ in range(self.pop_size)]
+            fresh_pop = [get_random_allocation_from_preferences(self.auction) for _ in range(self.pop_size)]
             population = population + fresh_pop
             # Calculate fitness of population
             fitness_scores = [self.fitness(alloc) for alloc in population]
@@ -99,14 +104,44 @@ class GeneticAlgorithmContinuous(GeneticAlgorithm):
         # Fitness score is equal to the social welfare
         return self.auction.get_approximate_price(create_bundle_allocation_from_item_allocation(alloc))
 
+    @classmethod
+    def get_name(self):
+        return "ga_continuous"
+
 
 class GeneticAlgorithmDiscreet(GeneticAlgorithm):
     def fitness(self, alloc):
         # Fitness score is equal to the social welfare
         return self.auction.get_highest_bid_pay(create_bundle_allocation_from_item_allocation(alloc))
 
+    @classmethod
+    def get_name(self):
+        return "ga_discreet"
 
-def get_prices(auction, algorithm=GeneticAlgorithmContinuous, settings=None):
+
+class GeneticAlgorithmMixed(GeneticAlgorithm):
+    def __init__(self, auction, max_iter=1, pop_size=5, mutation_rate=0.1):
+        super().__init__(auction, max_iter, pop_size, mutation_rate)
+
+    def fitness(self, alloc):
+        # Fitness score is equal to the social welfare
+        return self.auction.get_approximate_price(
+            create_bundle_allocation_from_item_allocation(alloc)) + self.auction.get_highest_bid_pay(
+            create_bundle_allocation_from_item_allocation(alloc))
+
+    @classmethod
+    def get_name(self):
+        return "ga_mixed"
+
+
+def run_experiment(auction, algorithm, settings):
+    allocation, prices = get_prices_and_allocation(auction, algorithm, settings)
+
+    return allocation, prices, auction.get_social_welfare(create_bundle_allocation_from_item_allocation(allocation),
+                                                          prices)
+
+
+def get_prices_and_allocation(auction, algorithm=GeneticAlgorithmContinuous, settings=None):
     sub_auctions = auction.get_sub_auctions()
     main_alg = algorithm(auction, **settings)
 
@@ -117,7 +152,7 @@ def get_prices(auction, algorithm=GeneticAlgorithmContinuous, settings=None):
         alg = algorithm(auc, **settings)
         sub_allocations.append(alg.calculate())
 
-    return prices_from_allocations(auction, main_allocation, sub_auctions, sub_allocations)
+    return main_allocation, prices_from_allocations(auction, main_allocation, sub_auctions, sub_allocations)
 
 
 def prices_from_allocations(auction, main_allocation, sub_auctions, sub_allocation):
